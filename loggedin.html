@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>EnviroMode: Post Cleaning Events</h1>
+            <h3><a class="machine-link" href="http://127.0.0.1:5500/trashdetection.html">Trash Detection & Earn Points</a></h3>
+            <form action="">
+                <input type="text" id="note-title" placeholder="Note title">
+                <input type="text" id="note-location" placeholder="Location">
+                <textarea id="note-text" placeholder="Event Details"></textarea>
+            
+                <button id="add-btn"><i class="fa-solid fa-plus"></i> Add Event</button>
+            </form>
+        </div>
+    </header>
+
+    <style>
+        body{
+        background-color: rgb(220, 236, 236);
+}
+    </style>
+
+    <section>
+        <div class="container">
+            <h2>Your Events</h2>
+            <hr>
+            <div id="notes">
+        
+                <div class="note">
+                    <h3 class="note-title"> $element.title </h3>
+                    <h4 class="note-location">$element.location</h4>
+                    <p class="note-text"> $element.text</p>
+                    <button class="note-btn"><i class="fa-solid fa-trash"></i> Delete Event</button>
+                </div>
+            
+        </div>
+        </div>
+    </section>
+    
+
+    <script src="main.js"></script>
+</body>
+</html>

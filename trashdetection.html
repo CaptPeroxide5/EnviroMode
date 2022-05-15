@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="styles3.css" />
+  </head>
+  <body>
+
+	<h5 class="rules">Earn 5 Points if no trash is detected</h5>
+	<h5 class="rules">Earn 1 Point if trash is detected</h5>
+    <style>
+      body {
+        background-color: rgb(220, 236, 236);
+      }
+    </style>
+    <img id="imagePreview" style="height: 300px" />
+    <input id="imageUpload" type="file" />
+    <div id="label-container"></div>
+    <p id="fileCounter"></p>
+    <p id="scoreCounter"></p>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+      // More API functions here:
+      // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+
+      // the link to your model provided by Teachable Machine export panel
+      const URL = "https://teachablemachine.withgoogle.com/models/-f0QXlCls/";
+
+      let model, labelContainer, maxPredictions;
+      let uploadedFiles = 0;
+      let scoreCounter = 0;
+
+      // Load the image model
+      async function init() {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        // load the model and metadata
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        labelContainer = document.getElementById("label-container");
+        for (let i = 0; i < maxPredictions; i++) {
+          // and class labels
+          labelContainer.appendChild(document.createElement("div"));
+        }
+      }
+
+      async function predict() {
+        // predict can take in an image, video or canvas html element
+        var image = document.getElementById("imagePreview");
+        const prediction = await model.predict(image, false);
+        for (let i = 0; i < maxPredictions; i++) {
+          const classPrediction =
+            prediction[i].className +
+            ": " +
+            prediction[i].probability.toFixed(2);
+          labelContainer.childNodes[i].innerHTML = classPrediction;
+
+          if (prediction[i].className == "No Trash Detected") {
+            const notTrash = prediction[i].probability > 0.5;
+            if (notTrash) {
+              scoreCounter += 5;
+              const pointsCounter = document.getElementById("scoreCounter");
+              pointsCounter.textContent = "Total Points: " + scoreCounter;
+            } else {
+              scoreCounter += 1;
+              const pointsCounter = document.getElementById("scoreCounter");
+              pointsCounter.textContent = "Total Points: " + scoreCounter;
+            }
+          }
+        }
+
+        uploadedFiles++;
+        const fileCounter = document.getElementById("fileCounter");
+        fileCounter.textContent = "Files Uploaded: " + uploadedFiles;
+      }
+
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      let loaded = false;
+      function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = async function (e) {
+            $("#imagePreview").attr("src", e.target.result);
+            // $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
+            $("#imagePreview").hide();
+            $("#imagePreview").fadeIn(650);
+
+            if (!loaded) {
+              await init();
+              loaded = true;
+            }
+            predict();
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+      $("#imageUpload").change(function (ev) {
+        ev.preventDefault();
+        readURL(this);
+      });
+    </script>
+
+    <button class="backs"><a class="back" href="http://127.0.0.1:5500/loggedin.html">Post Events</a></button>
+
+	<style>
+		.back{
+			text-decoration: none;
+			color: white;
+			font-size: 20px;
+		}
+
+		.backs{
+			background-color: #8BC14D;
+			outline: none;
+			border: none;
+			border-radius: 10px;
+			position: relative;
+			left: 50rem;
+			bottom: 20rem;
+		}
+	</style>
+  </body>
+</html>
